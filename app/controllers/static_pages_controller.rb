@@ -3,6 +3,7 @@ class StaticPagesController < ApplicationController
   end
 
   def help
+    # hoge
   end
 
   def about
