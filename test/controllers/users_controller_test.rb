@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UsersControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:one)
+    @user = User.new(name: "Example User", email: "user@example.com")
   end
 
   test "should get index" do
