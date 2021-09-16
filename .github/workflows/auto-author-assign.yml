@@ -1,17 +1,21 @@
 name: Auto Author Assign
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   assign-author:
+    name: Auto Author Assign
     runs-on: ubuntu-latest
     steps:
       - run: cat $GITHUB_EVENT_PATH
       - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
         env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           ASSIGNEE: ${{ github.event.pull_request.user.login }}
