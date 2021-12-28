@@ -83,4 +83,12 @@ RSpec.describe Book, type: :model do
       end
     end
   end
+
+  it do
+    travel_to(Time.current) do
+      p Time.current # ブロック中では時間が進まない
+      sleep 3
+      p Time.current
+    end
+  end
 end
