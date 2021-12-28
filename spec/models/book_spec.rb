@@ -54,4 +54,24 @@ RSpec.describe Book, type: :model do
       end
     end
   end
+
+  describe "Book#bonus" do
+    context "lucky?がtrueのとき" do
+      it "チェキが返ること" do
+        book = Book.new
+        allow(book).to receive(:lucky?).and_return(true)  # lucky のスタブ化
+        # 確認するメソッド呼び出しを実行する前に書く
+        expect(book).to receive(:lucky?) # lucky をモックとして扱う
+        expect(book.bonus).to eq("著者サイン入りチェキ")
+
+        # スタブ
+        #    受信メッセージのテストに使う
+        #    テストで注目しているオブジェクトが依存するものを、決まりきった動きしかしない偽物に置き換え、テストの合否が注目しているオブジェクト実装の正しさだけに依存するようにして、検証するために使う
+        # モック
+        #    送信メッセージのテストに使う
+        #    オブジェクトが副作用のあるメッセージを送信するとき、適切な引数・回数で送信しているか、引数の検証や回数の検証に使う
+        #    メッセージの受け手を偽物にすり替えておき、この偽物にメッセージの引数や呼び出し回数が想定通りか検証させる、そのためのモック
+      end
+    end
+  end
 end
