@@ -12,6 +12,7 @@ RSpec.describe "StaticPages", type: :request do
     it "returns http success" do
       get "/static_pages/home"
       expect(response).to have_http_status(:success)
+      expect(response.body).to include('Ruby on Rails Tutorial Sample App')
     end
   end
 
