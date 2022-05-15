@@ -18,7 +18,8 @@ RSpec.describe "UsersSignups", type: :request do
           }
         }
       end
-      assert_template 'users/new'
+      # assert は minitest の書き方なので、RSpecらしく書こう
+      expect(response).to render_template('users/new')
       assert_includes 'div#error_explanation', 'div', 'The form contains 4 errors.'
     end
 
@@ -32,8 +33,15 @@ RSpec.describe "UsersSignups", type: :request do
         }
       end
       follow_redirect!
-      assert_template 'users/show'
+      
+      # assert は minitest の書き方なので、RSpecらしく書こう
+      # assert_template 'users/show'
+      expect(response).to render_template('users/show')
+
       assert_not flash.empty?
+
+      # assert is_logged_in?
+      expect(is_logged_in?).to be_truthy
     end
   end
 end
