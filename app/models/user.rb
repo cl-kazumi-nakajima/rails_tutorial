@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :remember_token # 仮想属性
+
   # before_save { self.email = email.downcase }
   # リスト 6.34:もう１つのコールバック処理の実装方法
   before_save { email.downcase! }
@@ -11,12 +13,33 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
 
-  # fixture向けのdigestメソッド
   # 渡された文字列のハッシュ値を返す
-  # FactoryBotでは不要
-  # def User.digest(string)
-  #   cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
-  #                                                 BCrypt::Engine.cost
-  #   BCrypt::Password.create(string, cost: cost)
-  # end
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+
+  # ランダムなトークンを返す
+  def User.new_token
+    SecureRandom.urlsafe_base64
+  end
+
+  # 永続セッションのためにユーザーをデータベースに記憶する
+  def remember
+    self.remember_token = User.new_token # ローカル変数ではないので self をつける
+    update_attribute(:remember_digest, User.digest(remember_token)) # バリデーションを素通りさせる(特定の属性のみ更新させたい場合に検証を回避する)
+  end
+
+  # 渡されたトークンがダイジェストと一致したらtrueを返す
+  def authenticated?(remember_token)
+    return false if remember_digest.nil?
+    # remember_digestは、self.remember_digestと同じ
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+
+  # ユーザーのログイン情報を破棄する
+  def forget
+    update_attribute(:remember_digest, nil)
+  end
 end
