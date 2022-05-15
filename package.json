@@ -3,6 +3,7 @@
     "@rails/webpacker": "5.4.3",
     "bootstrap": "3.4.1",
     "jquery": "3.4.1",
+    "jquery-ujs": "^1.2.3",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },
