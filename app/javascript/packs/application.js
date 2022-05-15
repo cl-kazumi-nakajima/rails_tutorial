@@ -1,3 +1,4 @@
+// なぜ一方が requireで、一方が import なのか、筆者にはわからないと書いてあるｗ
 require("jquery")
 import "bootstrap"
 import {} from 'jquery-ujs'
