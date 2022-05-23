@@ -54,5 +54,19 @@ RSpec.describe "UsersLogins", type: :request do
       get root_path
       assert flash.empty?
     end
+
+    it 'login with remembering' do
+      log_in_as(user, remember_me: '1')
+      expect(cookies[:remember_token]).not_to eq nil
+    end
+
+    it 'login without remembering' do
+      # cookieを保存してログイン
+      log_in_as(user, remember_me: '1')
+      delete logout_path
+      # cookieを削除してログイン
+      log_in_as(user, remember_me: '0')
+      expect(cookies[:remember_token]).to eq ''
+    end
   end
 end

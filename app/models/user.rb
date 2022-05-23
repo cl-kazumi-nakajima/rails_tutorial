@@ -13,6 +13,12 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }
 
+  # 敢えて、複数のクラスメソッド定義方法を用いている(9.4)
+  # 1. User.xxx
+  # 2. self.xxx
+  # 3. class << self
+  #      def xxx
+
   # 渡された文字列のハッシュ値を返す
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
@@ -26,9 +32,10 @@ class User < ApplicationRecord
   end
 
   # 永続セッションのためにユーザーをデータベースに記憶する
+  # remember_tokenをユーザーと関連付け、remember_tokenに対応するremember_digestをデータベースに保存
   def remember
     self.remember_token = User.new_token # ローカル変数ではないので self をつける
-    update_attribute(:remember_digest, User.digest(remember_token)) # バリデーションを素通りさせる(特定の属性のみ更新させたい場合に検証を回避する)
+    update_attribute(:remember_digest, User.digest(self.remember_token)) # バリデーションを素通りさせる(特定の属性のみ更新させたい場合に検証を回避する)
   end
 
   # 渡されたトークンがダイジェストと一致したらtrueを返す
