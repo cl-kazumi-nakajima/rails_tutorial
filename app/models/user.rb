@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   # 敢えて、複数のクラスメソッド定義方法を用いている(9.4)
   # 1. User.xxx
-  # 2. self.xxx
+  # 2. self.xxx   # selfにすると、VSCodeで定義ジャンプできる
   # 3. class << self
   #      def xxx
 
@@ -27,7 +27,7 @@ class User < ApplicationRecord
   end
 
   # ランダムなトークンを返す
-  def User.new_token
+  def self.new_token
     SecureRandom.urlsafe_base64
   end
 

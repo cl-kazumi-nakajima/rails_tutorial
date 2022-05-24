@@ -75,5 +75,5 @@ RSpec.configure do |config|
 
   config.include ApplicationHelper
 
-  config.include RequestHelpers, type: :request
+  config.include SpecHelpers
 end

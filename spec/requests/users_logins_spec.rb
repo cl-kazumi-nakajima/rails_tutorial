@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "UsersLogins", type: :request do
-  # 以下は同じ意味。下の方は省略形(support/factory_bot.rb で、FactoryBotを省略できるようにしてる)
+  # 以下は同じ意味。下の方は省略形(support/factory_bot.rb で、FactoryBot. を省略できるようにしてる)
   # @user = FactoryBot.create(:user)
   let(:user) { create(:user, password: 'password', password_confirmation: 'password') }
 
