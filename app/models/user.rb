@@ -10,8 +10,8 @@ class User < ApplicationRecord
             length: { maximum: 255 },
             format: { with: VALID_EMAIL_REGEX },
             uniqueness: { case_sensitive: false }
-  has_secure_password
-  validates :password, presence: true, length: { minimum: 6 }
+  has_secure_password # オブジェクト生成時に存在性を検証(新しくレコードが追加されたときだけに適用される)
+  validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
   # 敢えて、複数のクラスメソッド定義方法を用いている(9.4)
   # 1. User.xxx
