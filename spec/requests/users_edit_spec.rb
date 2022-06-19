@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe "UsersEdits", type: :request do
+RSpec.describe "UsersEdit", type: :request do
   let(:user_michael) { create(:user_michael) }
   let(:user_archer) { create(:user_archer) }
 
-  describe "GET /users/edit" do
+  describe "PUT /users/edit" do
     it "unsuccessful edit" do
       log_in_as(user_michael)
       get edit_user_path(user_michael)
@@ -48,6 +48,15 @@ RSpec.describe "UsersEdits", type: :request do
                                                 email: user_michael.email } }
       assert_not flash.empty?
       assert_redirected_to login_url
+    end
+
+    it "should not allow the admin attribute to be edited via the web" do
+      log_in_as(user_archer)
+      expect(user_archer.admin?).to be(false)
+      patch user_path(user_archer), params: { user: { password:              "password",
+                                                      password_confirmation: "password",
+                                                      admin: true } }
+      expect(user_archer.admin?).to be(false)
     end
 
     it "should redirect edit when logged in as wrong user" do

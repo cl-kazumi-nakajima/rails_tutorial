@@ -5,6 +5,7 @@ FactoryBot.define do
     # password_digest { User.digest('password') } # FactoryBotでは不要
     password {"foobar"}
     password_confirmation {"foobar"}
+    admin {true}
   end
 
   factory :user_archer, class: 'User' do
