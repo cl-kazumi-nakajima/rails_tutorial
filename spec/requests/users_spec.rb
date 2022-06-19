@@ -8,4 +8,10 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET /index" do
+    it "should redirect index when not logged in" do
+      get users_path
+      expect(response).to redirect_to login_url
+    end
+  end
 end
