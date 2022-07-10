@@ -41,15 +41,31 @@ class User < ApplicationRecord
   end
 
   # 渡されたトークンがダイジェストと一致したらtrueを返す
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
     # remember_digestは、self.remember_digestと同じ
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    BCrypt::Password.new(digest).is_password?(token)
   end
 
   # ユーザーのログイン情報を破棄する
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  # アカウントを有効にする
+  def activate
+    # self.update_attribute とも書けるが、self はモデル内では必須ではない
+    # update_attribute(:activated, true)
+    # update_attribute(:activated_at, Time.zone.now)
+
+    # update_columnsは、モデルのコールバックやバリデーションが実行されない点がupdate_attributeと異なる
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  # 有効化用のメールを送信する
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
   end
 
   private

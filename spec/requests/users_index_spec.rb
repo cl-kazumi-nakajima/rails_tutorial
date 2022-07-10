@@ -1,32 +1,70 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
-  let(:admin) {create(:user_michael)}
-  let!(:non_admin) { create(:user_archer) }
+
+  # TDOO: RSpec用に書き直す
+
+  let!(:user) {create(:user_michael)}
+  let!(:other_user) { create(:user_archer) }
+
+  describe "GET /signup" do
+    it "should get new" do
+      get signup_path
+      assert_response :success
+    end
+  end
 
   describe "GET /users" do
-    before do
-      30.times do
-        create(:user)
-      end
-      log_in_as(admin)
+    it "should redirect index when not logged in" do
       get users_path
+      assert_redirected_to login_url
     end
-
-    it "div.paginationが上下に1つずつ存在すること" do
-      expect(response.body.scan('<div role="navigation" aria-label="Pagination" class="pagination">').length).to eq(2)
+  end
+    
+  describe "PUT /users/edit" do
+    it "should redirect edit when not logged in" do
+      get edit_user_path(user)
+      assert_not flash.empty?
+      assert_redirected_to login_url
     end
+  
+    it "should redirect update when not logged in" do
+      patch user_path(user), params: { user: { name: user.name,
+                                                email: user.email } }
+      assert_not flash.empty?
+      assert_redirected_to login_url
+    end
+  
+    it "should redirect edit when logged in as wrong user" do
+      log_in_as(other_user)
+      get edit_user_path(user)
+      assert flash.empty?
+      assert_redirected_to root_url
+    end
+  
+    it "should redirect update when logged in as wrong user" do
+      log_in_as(other_user)
+      patch user_path(user), params: { user: { name: user.name,
+                                                email: user.email } }
+      assert flash.empty?
+      assert_redirected_to root_url
+    end
+  end
 
-    it "ユーザーごとのリンクが存在すること" do
-      User.paginate(page: 1).each do |user|
-        expect(response.body).to include "<a href=\"#{user_path(user)}\">"
+  describe "DELETE /users" do
+    it "should redirect destroy when not logged in" do
+      assert_no_difference 'User.count' do
+        delete user_path(user)
       end
+      assert_redirected_to login_url
     end
-
-    it "ユーザーごとのdelete linkが存在すること" do
-      User.paginate(page: 1).each do |user|
-        expect(response.body).to include "href=\"#{user_path(user)}\">delete</a>"
+  
+    it "should redirect destroy when logged in as a non-admin" do
+      log_in_as(other_user)
+      assert_no_difference 'User.count' do
+        delete user_path(user)
       end
+      assert_redirected_to root_url
     end
   end
 end

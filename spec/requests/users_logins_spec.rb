@@ -57,6 +57,9 @@ RSpec.describe "UsersLogins", type: :request do
 
     it 'login with remembering' do
       log_in_as(user, remember_me: '1')
+      # assigns を使うためには、user が インスタンス変数でなければならない(Rails tutorial リスト 9.28)
+      # assignsメソッドはRails 5以降はデフォルトのRailsテストで非推奨化
+      # リスト 3.2に含まれるrails-controller-testingというgemを用いることで現在でも利用できる
       expect(cookies[:remember_token]).to eq assigns(:user).remember_token
     end
 

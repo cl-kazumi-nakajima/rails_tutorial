@@ -37,6 +37,15 @@ FactoryBot.define do
     activated_at {Time.zone.now}
   end
 
+  factory :user_no_activated, class: 'User' do
+    name { "User No Activated" }
+    email { "no@example.com" }
+    password {"foobar"}
+    password_confirmation {"foobar"}
+    activated {false}
+    activated_at {nil}
+  end
+
   factory :user, class: 'User' do
     sequence(:name) { |i| "User_#{i}" }
     sequence(:email) { |i| "user-#{i}@example.com" }

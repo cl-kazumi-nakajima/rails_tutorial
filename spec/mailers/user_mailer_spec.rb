@@ -2,12 +2,13 @@ require "rails_helper"
 
 RSpec.describe UserMailer, type: :mailer do
   describe "account_activation" do
-    let(:mail) { UserMailer.account_activation }
+    let(:user_michael) { create(:user_michael) }
+    let(:mail) { UserMailer.account_activation(user_michael) }
 
     it "renders the headers" do
       expect(mail.subject).to eq("Account activation")
-      expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+      expect(mail.to).to eq([user_michael.email])
+      expect(mail.from).to eq(["noreply@example.com"])
     end
 
     it "renders the body" do
@@ -21,7 +22,7 @@ RSpec.describe UserMailer, type: :mailer do
     it "renders the headers" do
       expect(mail.subject).to eq("Password reset")
       expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+      expect(mail.from).to eq(["noreply@example.com"])
     end
 
     it "renders the body" do
