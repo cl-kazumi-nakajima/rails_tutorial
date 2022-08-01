@@ -1,7 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "Microposts", type: :request do
-  describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
+  let!(:micropost) { create(:micropost) }
+
+  it "should redirect create when not logged in" do
+    assert_no_difference 'Micropost.count' do
+      post microposts_path, params: { micropost: { content: "Lorem ipsum" } }
+    end
+    assert_redirected_to login_url
+  end
+
+  it "should redirect destroy when not logged in" do
+    assert_no_difference 'Micropost.count' do
+      delete micropost_path(micropost)
+    end
+    assert_redirected_to login_url
   end
 end
