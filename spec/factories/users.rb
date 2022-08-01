@@ -53,5 +53,10 @@ FactoryBot.define do
     password_confirmation {"foobar"}
     activated {true}
     activated_at {Time.zone.now}
+
+    # user create時に、:with_posts を指定すれば実行される
+    trait :with_posts do
+      after(:create) { |user| create_list(:micropost, 31, user: user) }
+    end
   end
 end
