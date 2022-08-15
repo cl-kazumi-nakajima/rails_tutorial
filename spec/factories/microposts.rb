@@ -28,4 +28,28 @@ FactoryBot.define do
     created_at { 42.days.ago }
     association :user
   end
+
+  factory :micropost_ants, class: 'Micropost' do
+    content { "Oh, is that what you want? Because that's how you get ants!" }
+    created_at { 2.years.ago }
+    association :user
+  end
+
+  factory :micropost_zone, class: 'Micropost' do
+    content { "Danger zone!" }
+    created_at { 3.days.ago }
+    association :user
+  end
+
+  factory :micropost_tone, class: 'Micropost' do
+    content { "I'm sorry. Your words made sense, but your sarcastic tone did not." }
+    created_at { 10.minutes.ago }
+    association :user
+  end
+
+  factory :micropost_van, class: 'Micropost' do
+    content { "Dude, this van's, like, rolling probable cause." }
+    created_at { 4.hours.ago }
+    association :user
+  end
 end
