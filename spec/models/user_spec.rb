@@ -80,6 +80,7 @@ RSpec.describe User, type: :model do
     expect(user_michael.following.include?(user_archer)).to be false
     user_michael.follow(user_archer)
     expect(user_michael.following.include?(user_archer)).to be true
+    expect(user_archer.followers.include?(user_michael)).to be true
     user_michael.unfollow(user_archer)
     expect(user_michael.following.include?(user_archer)).to be false
   end

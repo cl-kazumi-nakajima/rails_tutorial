@@ -3,9 +3,14 @@ class User < ApplicationRecord
   has_many :active_relationships, class_name:  "Relationship",
                                   foreign_key: "follower_id",
                                   dependent:   :destroy
+  has_many :passive_relationships, class_name:  "Relationship",
+                                  foreign_key: "followed_id",
+                                  dependent:   :destroy
   # フォローしているユーザーを配列の様に扱えるようになる
   # followeds は英単語としておかしい。「following配列の元はfollowed idの集合である」ということを明示的にしてる
   has_many :following, through: :active_relationships, source: :followed
+  # こちらは source を省略できる（Railsが「followers」を単数形にして自動的に外部キーfollower_idを探してくれるから）
+  has_many :followers, through: :passive_relationships, source: :follower
 
   attr_accessor :remember_token, :activation_token, :reset_token # 仮想属性
 
