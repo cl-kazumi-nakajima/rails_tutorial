@@ -15,4 +15,11 @@ RSpec.describe "UsersProfiles", type: :request do
       assert_match micropost.content, response.body
     end
   end
+
+  it "count relationships" do
+    get user_path(user)
+    # count だと Integer なのでマッチしない
+    assert_select 'strong#following', text: user.following.count.to_s
+    assert_select 'strong#followers', text: user.following.count.to_s
+  end
 end

@@ -12,10 +12,25 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
-  resources :users
+
+  # /users/1/following や /users/1/followers のようになる
+  resources :users do
+    # memberメソッドを使うとユーザーidが含まれているURLを扱うようになる
+    member do
+      get :following, :followers
+    end
+
+    # idを指定せずにすべてのメンバーを表示するには、次のようにcollectionメソッドを使う
+    # このコードは /users/tigers というURLに応答
+    # collection do
+    #  get :tigers
+    # end
+  end
+
   resources :account_activations, only: [:edit]
   resources :password_resets, only: [:new, :create, :edit, :update]
   resources :microposts, only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   resources :books
 
