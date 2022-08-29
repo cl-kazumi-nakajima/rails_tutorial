@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :user_michael, class: 'User' do
+  factory :user_michael, class: 'User', aliases: [:followed, :follower] do
     name { "Michael Example" }
     email { "michael@example.com" }
     # password_digest { User.digest('password') } # FactoryBotでは不要
