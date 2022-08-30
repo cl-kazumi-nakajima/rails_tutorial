@@ -31,4 +31,32 @@ RSpec.describe "Followings", type: :request do
       assert_select "a[href=?]", user_path(user)
     end
   end
+
+  it "should follow a user the standard way" do
+    assert_difference 'user_michael.following.count', 1 do
+      post relationships_path, params: { followed_id: user_archer.id }
+    end
+  end
+
+  it "should follow a user with Ajax" do
+    assert_difference 'user_michael.following.count', 1 do
+      post relationships_path, xhr: true, params: { followed_id: user_archer.id }
+    end
+  end
+
+  it "should unfollow a user the standard way" do
+    user_michael.follow(user_archer)
+    relationship = user_michael.active_relationships.find_by(followed_id: user_archer.id)
+    assert_difference 'user_michael.following.count', -1 do
+      delete relationship_path(relationship)
+    end
+  end
+
+  it "should unfollow a user with Ajax" do
+    user_michael.follow(user_archer)
+    relationship = user_michael.active_relationships.find_by(followed_id: user_archer.id)
+    assert_difference 'user_michael.following.count', -1 do
+      delete relationship_path(relationship), xhr: true
+    end
+  end
 end
