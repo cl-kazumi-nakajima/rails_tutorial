@@ -5,6 +5,7 @@ RSpec.describe "Followings", type: :request do
   let!(:user_lana) { create(:user_lana) }
   let!(:user_malory) { create(:user_malory) }
   let!(:user_archer) { create(:user_archer) }
+  let!(:micropost1) { create(:micropost_tone, user: user_michael) }
   let!(:relationship1) { create(:relationship, follower: user_michael, followed: user_lana) }
   let!(:relationship2) { create(:relationship, follower: user_michael, followed: user_malory) }
   let!(:relationship3) { create(:relationship, follower: user_lana, followed: user_michael) }
@@ -57,6 +58,14 @@ RSpec.describe "Followings", type: :request do
     relationship = user_michael.active_relationships.find_by(followed_id: user_archer.id)
     assert_difference 'user_michael.following.count', -1 do
       delete relationship_path(relationship), xhr: true
+    end
+  end
+
+  it "feed on Home page" do
+    get root_path
+    user_michael.feed.paginate(page: 1).each do |micropost|
+      # micropost_tone の場合特殊文字がエスケープされてる
+      assert_match CGI.escapeHTML(micropost.content), response.body
     end
   end
 end

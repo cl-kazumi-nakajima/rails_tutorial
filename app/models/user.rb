@@ -97,11 +97,22 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
-  # 試作feedの定義
-  # 完全な実装は次章の「ユーザーをフォローする」を参照
   def feed
-    # following_ids = following.map(&:id)
-    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    # 第一段階
+    # memo: following_ids = following.map(&:id)
+    # Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)   # 非効率
+
+    # 第二段階
+    # following_ids = "SELECT followed_id FROM relationships
+    #                   WHERE follower_id = :user_id"
+    # Micropost.where("user_id IN (#{following_ids})
+    #                   OR user_id = :user_id", user_id: id)
+
+    # 第三段階:left_outer_join を使う
+    part_of_feed = "relationships.follower_id = :id or microposts.user_id = :id"
+    Micropost.left_outer_joins(user: :followers)
+              .where(part_of_feed, { id: id }).distinct
+              .includes(:user, image_attachment: :blob)
   end
 
   # ユーザーをフォローする
