@@ -91,21 +91,21 @@ RSpec.describe User, type: :model do
     let!(:user_lana) { create(:user_lana) }
     let!(:micropost1) { create(:micropost_orange, user: user_michael) }
     let!(:micropost2) { create(:micropost_tau_manifesto, user: user_archer) }
-    let!(:micropost3) { create(:micropost_tau_manifesto, user: user_lana) }
-    let!(:relationship1) { create(:relationship, follower: user_lana, followed: user_michael) }
+    let!(:micropost3) { create(:micropost_cat_video, user: user_lana) }
+    let!(:relationship1) { create(:relationship, follower: user_michael, followed: user_lana) }
 
     it do
       # フォローしているユーザーの投稿を確認
       user_lana.microposts.each do |post_following|
-        assert user_michael.feed.include?(post_following)
+        expect(user_michael.feed.include?(post_following)).to be_truthy
       end
       # 自分自身の投稿を確認
       user_michael.microposts.each do |post_self|
-        assert user_michael.feed.include?(post_self)
+        expect(user_michael.feed.include?(post_self)).to be_truthy
       end
       # フォローしていないユーザーの投稿を確認
       user_archer.microposts.each do |post_unfollowed|
-        assert_not user_michael.feed.include?(post_unfollowed)
+        expect(user_michael.feed.include?(post_unfollowed)).to be_falsy
       end
     end
   end
