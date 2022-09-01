@@ -85,4 +85,28 @@ RSpec.describe User, type: :model do
     expect(user_michael.following.include?(user_archer)).to be false
   end
 
+  describe "feed should have the right posts" do
+    let!(:user_michael) { create(:user_michael) }
+    let!(:user_archer) { create(:user_archer) }
+    let!(:user_lana) { create(:user_lana) }
+    let!(:micropost1) { create(:micropost_orange, user: user_michael) }
+    let!(:micropost2) { create(:micropost_tau_manifesto, user: user_archer) }
+    let!(:micropost3) { create(:micropost_tau_manifesto, user: user_lana) }
+    let!(:relationship1) { create(:relationship, follower: user_lana, followed: user_michael) }
+
+    it do
+      # フォローしているユーザーの投稿を確認
+      user_lana.microposts.each do |post_following|
+        assert user_michael.feed.include?(post_following)
+      end
+      # 自分自身の投稿を確認
+      user_michael.microposts.each do |post_self|
+        assert user_michael.feed.include?(post_self)
+      end
+      # フォローしていないユーザーの投稿を確認
+      user_archer.microposts.each do |post_unfollowed|
+        assert_not user_michael.feed.include?(post_unfollowed)
+      end
+    end
+  end
 end
